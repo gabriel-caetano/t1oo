@@ -1,21 +1,13 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Properties;
+import java.sql.*;
+import java.util.Date;
 
 public class Main {
-    public static void main(String[] args) {
-        String url = "jdbc:mysql://localhost:12346/t1oo";
-        Properties info = new Properties();
-        info.put("user", "root");
-        info.put("password", "123456789");
-        System.out.println("Connecting database...");
-
-        try {
-            Connection connection = DriverManager.getConnection(url, info);
-            System.out.println("Database connected!");
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
+    public static void main(String[] args) throws SQLException {
+        ClientDAO clientDao = new ClientDAO();
+        // Client client = new Client("Fulano", "40028922", "2000-02-20");
+        ResultSet res = clientDao.getAllClients();
+        while (res.next()) {
+            System.out.println(res.getString("name"));
         }
     }
 }
