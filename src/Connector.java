@@ -2,11 +2,11 @@ import java.sql.*;
 import java.util.Properties;
 
 public class Connector {
-    private Connection connect() {
-        String url = "jdbc:mysql://localhost:12346/t1oo";
+    public Connection connect() {
+        String url = "jdbc:mysql://0.0.0.0:1234/t1oo";
         Properties info = new Properties();
         info.put("user", "root");
-        info.put("password", "123456789");
+        info.put("password", "1234");
         System.out.println("Connecting database...");
         try {
             System.out.println("Database connected!");
