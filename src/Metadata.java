@@ -3,23 +3,29 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Metadata {
-    static Connector connector = new Connector();
-    static Connection connection = null;
-    static DatabaseMetaData metadata = null;
+    Connector connector = new Connector();
+    Connection connection = null;
+    DatabaseMetaData metadata = null;
+    List<Table> tables = new ArrayList<Table>();
 
-    static {
+
+    public Metadata() throws SQLException {
         connection = connector.connect();
         try {
             metadata = connection.getMetaData();
+            this.getColumnsMetadata(this.getTablesMetadata());
         } catch (SQLException e) {
             System.err.println("There was an error getting the metadata: "
                     + e.getMessage());
         }
+
     }
 
-    public static ArrayList getTablesMetadata() throws SQLException {
+
+    private ArrayList getTablesMetadata() throws SQLException {
         String table[] = { "TABLE" };
         ResultSet rs = null;
         ArrayList tables = null;
@@ -32,14 +38,23 @@ public class Metadata {
         return tables;
     }
 
-    public static void getColumnsMetadata(ArrayList tables)
-        throws SQLException {
+    private void getColumnsMetadata(ArrayList tables) throws SQLException {
             ResultSet rs = null;
-            // Print the columns properties of the actual table
+
             for (Object actualTable : tables) {
+                Table table = new Table();
+                table.setName(String.valueOf(actualTable).toUpperCase());
                 rs = metadata.getColumns(null, null, (String)actualTable, null);
                 System.out.println(String.valueOf(actualTable).toUpperCase());
+
                 while (rs.next()) {
+
+                    table.setColumn(new Column(
+                            rs.getString("COLUMN_NAME"),
+                            rs.getString("TYPE_NAME"),
+                            Integer.valueOf(rs.getString("COLUMN_SIZE"))
+                    ));
+
                     System.out.println(rs.getString("COLUMN_NAME") + " "
                             + rs.getString("TYPE_NAME") + " "
                             + rs.getString("COLUMN_SIZE"));
