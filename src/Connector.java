@@ -8,6 +8,7 @@ public class Connector {
         info.put("user", "root");
         info.put("password", "1234");
         System.out.println("Connecting database...");
+
         try {
             System.out.println("Database connected!");
             return DriverManager.getConnection(url, info);

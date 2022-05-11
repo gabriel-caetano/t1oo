@@ -1,14 +1,18 @@
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
         Metadata metadata = new Metadata();
+        CrudGenerator generator =  new CrudGenerator();
 
-        System.out.println("oi  " +  metadata.tables);
-        //Metadata.getColumnsMetadata(Metadata.getTablesMetadata());
+        for(Table table : metadata.lstTables) {
+            System.out.println(generator.createClassTemplate(table));
+            System.out.print("==================================\n");
+            System.out.println(generator.createInterfaceDAOTemplate(table));
+            System.out.print("==================================\n");
+            System.out.println(generator.createDAOTemplate(table));
+            System.out.print("==================================");
+        }
 
     }
 }

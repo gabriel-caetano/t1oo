@@ -9,8 +9,7 @@ public class Metadata {
     Connector connector = new Connector();
     Connection connection = null;
     DatabaseMetaData metadata = null;
-    List<Table> tables = new ArrayList<Table>();
-
+    List<Table> lstTables = new ArrayList<Table>();
 
     public Metadata() throws SQLException {
         connection = connector.connect();
@@ -24,14 +23,11 @@ public class Metadata {
 
     }
 
-
     private ArrayList getTablesMetadata() throws SQLException {
-        String table[] = { "TABLE" };
-        ResultSet rs = null;
-        ArrayList tables = null;
-        // receive the Type of the object in a String array.
-        rs = metadata.getTables(null, null, null, table);
-        tables = new ArrayList();
+        String table[] = { "TABLE"};
+        ResultSet rs = metadata.getTables("t1oo", null, null, table);
+
+        ArrayList tables = new ArrayList();
         while (rs.next()) {
             tables.add(rs.getString("TABLE_NAME"));
         }
@@ -43,23 +39,18 @@ public class Metadata {
 
             for (Object actualTable : tables) {
                 Table table = new Table();
-                table.setName(String.valueOf(actualTable).toUpperCase());
+                lstTables.add(table);
+
+                table.setName(String.valueOf(actualTable));
                 rs = metadata.getColumns(null, null, (String)actualTable, null);
-                System.out.println(String.valueOf(actualTable).toUpperCase());
 
                 while (rs.next()) {
-
                     table.setColumn(new Column(
                             rs.getString("COLUMN_NAME"),
                             rs.getString("TYPE_NAME"),
                             Integer.valueOf(rs.getString("COLUMN_SIZE"))
                     ));
-
-                    System.out.println(rs.getString("COLUMN_NAME") + " "
-                            + rs.getString("TYPE_NAME") + " "
-                            + rs.getString("COLUMN_SIZE"));
                 }
-                System.out.println("\n");
-        }
+            }
     }
 }

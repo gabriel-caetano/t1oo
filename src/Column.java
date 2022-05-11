@@ -17,4 +17,7 @@ public class Column {
         return type;
     }
 
+    public Integer getSize() {
+        return size;
+    }
 }
